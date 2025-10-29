@@ -1,0 +1,18 @@
+# Aziro Cluster Center - UI Automation Dependencies
+
+# Playwright for browser automation
+playwright==1.48.0
+pytest-playwright==0.5.2
+
+# Testing framework
+pytest==8.3.3
+pytest-html==4.1.1
+pytest-xdist==3.6.1
+
+# Utilities
+python-dotenv==1.0.1
+requests==2.32.3
+
+# Reporting
+allure-pytest==2.13.5
+
