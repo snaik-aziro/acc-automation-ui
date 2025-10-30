@@ -7,6 +7,7 @@ import pytest
 from playwright.sync_api import Page
 from pages.dashboard_page import DashboardPage
 from pages.vm_page import VMPage
+from utils.test_reporter import reporter
 import logging
 import time
 from datetime import datetime
@@ -80,7 +81,7 @@ class TestVMManagement:
             name=vm_name,
             memory=512,  # Minimum memory
             cpu=1,       # Minimum CPU
-            network_type="NAT"
+            network_type="Private"
         )
         
         assert "successfully" in result.lower(), "VM creation should succeed with minimal specs"

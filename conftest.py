@@ -79,18 +79,39 @@ def dashboard_page(page: Page):
 @pytest.fixture(scope="function", autouse=True)
 def log_test_info(request):
     """
-    Log test information before and after each test
+    Log test information before and after each test with decorations
     """
+    from utils.test_reporter import reporter
+    
     test_name = request.node.name
-    logger.info(f"\n{'='*80}")
-    logger.info(f"Starting Test: {test_name}")
-    logger.info(f"{'='*80}\n")
+    
+    # Extract feature from markers
+    feature = "General"
+    for marker in request.node.iter_markers():
+        if marker.name in ['dashboard', 'vm_management', 'logs']:
+            feature = marker.name.replace('_', ' ').title()
+            break
+    
+    # Get test number from session
+    if not hasattr(request.session, 'test_counter'):
+        request.session.test_counter = 0
+    request.session.test_counter += 1
+    
+    # Print test start
+    reporter.print_test_start(test_name, feature, request.session.test_counter)
     
     yield
     
-    logger.info(f"\n{'='*80}")
-    logger.info(f"Completed Test: {test_name}")
-    logger.info(f"{'='*80}\n")
+    # Print test end based on test result
+    if hasattr(request.node, 'rep_call'):
+        if request.node.rep_call.passed:
+            reporter.print_test_end("pass", "Test completed successfully")
+        elif request.node.rep_call.failed:
+            reporter.print_test_end("fail", str(request.node.rep_call.longrepr))
+        elif request.node.rep_call.skipped:
+            reporter.print_test_end("skip", "Test was skipped")
+    else:
+        reporter.print_test_end("pass")
 
 
 @pytest.fixture(scope="function")
@@ -140,17 +161,34 @@ def pytest_configure(config):
 
 
 @pytest.fixture(scope="session", autouse=True)
-def session_setup_teardown():
+def session_setup_teardown(request):
     """
     Setup and teardown for the entire test session
     """
-    logger.info("="*100)
-    logger.info("Starting Aziro Cluster Center UI Automation Test Suite")
-    logger.info("="*100)
+    from utils.test_reporter import reporter
+    import time
+    
+    # Session start
+    reporter.print_header(
+        "🧪 AZIRO CLUSTER CENTER - UI AUTOMATION SUITE",
+        "Comprehensive End-to-End Testing"
+    )
+    reporter.print_info(f"Base URL: {BASE_URL}")
+    reporter.print_info(f"API URL: {API_URL}")
+    reporter.print_info(f"Browser: Chromium (Headed Mode)")
+    reporter.print_separator()
+    
+    session_start = time.time()
     
     yield
     
-    logger.info("="*100)
-    logger.info("Completed Aziro Cluster Center UI Automation Test Suite")
-    logger.info("="*100)
+    # Session end
+    session_duration = time.time() - session_start
+    
+    # Get test statistics from session
+    passed = request.session.testscollected - request.session.testsfailed
+    failed = request.session.testsfailed
+    skipped = 0  # Can be enhanced to track skipped tests
+    
+    reporter.print_final_summary(passed, failed, skipped, session_duration)
 
