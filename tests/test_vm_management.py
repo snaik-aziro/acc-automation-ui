@@ -1511,7 +1511,7 @@ class TestVMManagement:
                 logger.info(f"   - Memory Usage: {sys.getsizeof(page) + sys.getsizeof(vm_page)} bytes")
                 logger.info("=" * 100)
                 logger.info("=" * 100)
-        else:
+            else:
                 logger.info(f"   ⚠️  No VM cards found despite count > 0")
                 logger.info(f"      VM Count: {vm_count}")
                 logger.info(f"      VM Cards Length: {len(vm_cards)}")
