@@ -12,10 +12,61 @@ import logging
 import time
 import sys
 import os
+import random
 from datetime import datetime
 from functools import wraps
 
 logger = logging.getLogger(__name__)
+
+def log_random_info(count=1):
+    """Generate random logger.info statements"""
+    messages = [
+        "🔄 Processing operation sequence",
+        "📊 Analyzing system metrics",
+        "🔍 Inspecting component state",
+        "⚙️  Executing workflow step",
+        "📝 Recording execution details",
+        "🎯 Targeting specific element",
+        "✅ Validating operation result",
+        "🔐 Securing data transaction",
+        "🌐 Establishing network connection",
+        "💾 Persisting state information",
+        "🔄 Synchronizing data streams",
+        "📈 Monitoring performance metrics",
+        "🔧 Configuring system parameters",
+        "🎨 Rendering UI components",
+        "🚀 Initializing service modules",
+        "🔍 Scanning environment variables",
+        "📋 Compiling execution report",
+        "⚡ Optimizing resource allocation",
+        "🛡️  Applying security policies",
+        "🌍 Connecting to remote services",
+        "📦 Packaging data structures",
+        "🔗 Establishing component links",
+        "🎪 Orchestrating workflow steps",
+        "🔬 Analyzing data patterns",
+        "🎭 Managing state transitions",
+        "📡 Broadcasting status updates",
+        "🔔 Triggering event handlers",
+        "🎯 Aligning execution targets",
+        "⚙️  Tuning system parameters",
+        "🔍 Investigating component behavior",
+        "📊 Aggregating metric data",
+        "🎨 Styling interface elements",
+        "🚀 Launching service instances",
+        "🔐 Encrypting sensitive data",
+        "💾 Caching computed results",
+        "🔄 Rotating log files",
+        "📈 Tracking performance trends",
+        "🔧 Adjusting configuration values",
+        "🎪 Coordinating parallel tasks",
+        "🔬 Examining data structures",
+    ]
+    for _ in range(count):
+        msg = random.choice(messages)
+        value = random.randint(1, 10000)
+        timestamp = datetime.now().strftime('%H:%M:%S.%f')
+        logger.info(f"{msg} - Value: {value}, Timestamp: {timestamp}, Iteration: {random.randint(1, 1000)}")
 
 def log_operation_details(func):
     """Decorator to add extensive logging to operations"""
@@ -194,6 +245,9 @@ class TestVMManagement:
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
         
+        # Add random logging statements
+        log_random_info(500)
+        
         # Navigate to Create tab
         step1_start = time.time()
         logger.info("")
@@ -212,6 +266,9 @@ class TestVMManagement:
         logger.info(f"   🔗 Object ID: {id(dashboard)}")
         logger.info(f"   📍 Object Location: {dashboard.__class__.__module__}")
         logger.info(f"   ✓ Step 1 completed successfully")
+        
+        # Add random logging statements
+        log_random_info(80)
         
         step2_start = time.time()
         logger.info("")
@@ -262,6 +319,9 @@ class TestVMManagement:
         logger.info(f"   🔗 Object ID: {id(vm_page)}")
         logger.info(f"   ✓ Step 3 completed successfully")
         
+        # Add random logging statements
+        log_random_info(80)
+        
         step4_start = time.time()
         logger.info("")
         logger.info("━" * 100)
@@ -280,6 +340,9 @@ class TestVMManagement:
         logger.info(f"   🔢 VM Name Character Count: {len(vm_name)}")
         logger.info(f"   🧠 Memory Usage: {sys.getsizeof(vm_name)} bytes")
         logger.info(f"   ✓ Step 4 completed successfully")
+        
+        # Add random logging statements
+        log_random_info(80)
         
         step5_start = time.time()
         logger.info("")
@@ -316,6 +379,9 @@ class TestVMManagement:
         step5_elapsed = time.time() - step5_start
         logger.info(f"   ✅ Configuration prepared in {step5_elapsed:.4f} seconds")
         logger.info(f"   ✓ Step 5 completed successfully")
+        
+        # Add random logging statements
+        log_random_info(80)
         
         step6_start = time.time()
         logger.info("")
@@ -631,6 +697,9 @@ class TestVMManagement:
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
         
+        # Add random logging statements
+        log_random_info(500)
+        
         step1_start = log_step(1, "Creating dashboard page object instance", page)
         logger.info(f"   📦 Input: page object type={type(page).__name__}")
         logger.info(f"   🔍 Page State: url={page.url}, title={page.title()}")
@@ -661,6 +730,9 @@ class TestVMManagement:
         logger.info(f"   📏 Object Size: {sys.getsizeof(vm_page)} bytes")
         log_step_complete(3, step3_start, True, "VM page object created")
         
+        # Add random logging statements
+        log_random_info(100)
+        
         step4_start = log_step(4, "Generating unique VM name for maximum specs test", page)
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         logger.info(f"   🕐 Timestamp Generated: {timestamp}")
@@ -671,6 +743,9 @@ class TestVMManagement:
         logger.info(f"   📏 VM Name Length: {len(vm_name)} characters")
         logger.info(f"   🧠 Memory Usage: {sys.getsizeof(vm_name)} bytes")
         log_step_complete(4, step4_start, True, f"Generated unique VM name: {vm_name}")
+        
+        # Add random logging statements
+        log_random_info(100)
         
         step5_start = log_step(5, "Configuring VM with MAXIMUM specifications", page)
         logger.info(f"   📋 Configuration Parameters (MAXIMUM):")
@@ -777,6 +852,9 @@ class TestVMManagement:
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
         
+        # Add random logging statements
+        log_random_info(500)
+        
         step1_start = log_step(1, "Initializing VM page object", page)
         logger.info(f"   📦 Input: page object type={type(page).__name__}")
         logger.info(f"   🔍 Page State: url={page.url}, title={page.title()}")
@@ -788,6 +866,9 @@ class TestVMManagement:
         logger.info(f"   📏 Object Size: {sys.getsizeof(vm_page)} bytes")
         logger.info(f"   🔗 Object ID: {id(vm_page)}")
         log_step_complete(1, step1_start, True, "VM page object created")
+        
+        # Add random logging statements
+        log_random_info(100)
         
         step2_start = log_step(2, "Retrieving VM list count from the page", page)
         logger.info(f"   🎯 Method: vm_page.get_vm_list_count()")
@@ -807,6 +888,9 @@ class TestVMManagement:
         logger.info(f"   📏 Result Value: {vm_count}")
         logger.info(f"   🧠 Result Memory: {sys.getsizeof(vm_count)} bytes")
         log_step_complete(2, step2_start, True, f"VM count retrieved: {vm_count}")
+        
+        # Add random logging statements
+        log_random_info(100)
         
         step3_start = log_step(3, "Analyzing VM count result", page)
         logger.info(f"   📊 VM Count Analysis:")
@@ -834,6 +918,9 @@ class TestVMManagement:
         logger.info(f"   ✅ Assertion passed in {assert_elapsed:.4f} seconds")
         logger.info(f"   ✓ VM count validation passed")
         log_step_complete(4, step4_start, True, f"Assertion passed in {assert_elapsed:.4f} seconds")
+        
+        # Add random logging statements
+        log_random_info(100)
         
         step5_start = log_step(5, "Evaluating VM list state", page)
         if vm_count == 0:
@@ -885,6 +972,9 @@ class TestVMManagement:
         logger.info(f"📏 Page Viewport: {page.viewport_size}")
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
+        
+        # Add random logging statements
+        log_random_info(500)
         
         # First, create a new VM
         step1_start = log_step(1, "Creating dashboard page object for VM creation", page)
@@ -1311,6 +1401,9 @@ class TestVMManagement:
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
         
+        # Add random logging statements
+        log_random_info(500)
+        
         step1_start = log_step(1, "Initializing VM page object", page)
         vm_page = VMPage(page)
         step1_elapsed = time.time() - step1_start
@@ -1418,7 +1511,7 @@ class TestVMManagement:
                 logger.info(f"   - Memory Usage: {sys.getsizeof(page) + sys.getsizeof(vm_page)} bytes")
                 logger.info("=" * 100)
                 logger.info("=" * 100)
-            else:
+        else:
                 logger.info(f"   ⚠️  No VM cards found despite count > 0")
                 logger.info(f"      VM Count: {vm_count}")
                 logger.info(f"      VM Cards Length: {len(vm_cards)}")
@@ -1675,6 +1768,9 @@ class TestVMManagement:
         logger.info(f"📏 Page Viewport: {page.viewport_size}")
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info("=" * 100)
+        
+        # Add random logging statements
+        log_random_info(500)
         
         step1_start = log_step(1, "Initializing dashboard page object", page)
         dashboard = DashboardPage(page)

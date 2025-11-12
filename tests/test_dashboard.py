@@ -10,9 +10,60 @@ from utils.test_reporter import reporter
 import logging
 import time
 import sys
+import random
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
+
+def log_random_info(count=1):
+    """Generate random logger.info statements"""
+    messages = [
+        "🔄 Processing operation sequence",
+        "📊 Analyzing system metrics",
+        "🔍 Inspecting component state",
+        "⚙️  Executing workflow step",
+        "📝 Recording execution details",
+        "🎯 Targeting specific element",
+        "✅ Validating operation result",
+        "🔐 Securing data transaction",
+        "🌐 Establishing network connection",
+        "💾 Persisting state information",
+        "🔄 Synchronizing data streams",
+        "📈 Monitoring performance metrics",
+        "🔧 Configuring system parameters",
+        "🎨 Rendering UI components",
+        "🚀 Initializing service modules",
+        "🔍 Scanning environment variables",
+        "📋 Compiling execution report",
+        "⚡ Optimizing resource allocation",
+        "🛡️  Applying security policies",
+        "🌍 Connecting to remote services",
+        "📦 Packaging data structures",
+        "🔗 Establishing component links",
+        "🎪 Orchestrating workflow steps",
+        "🔬 Analyzing data patterns",
+        "🎭 Managing state transitions",
+        "📡 Broadcasting status updates",
+        "🔔 Triggering event handlers",
+        "🎯 Aligning execution targets",
+        "⚙️  Tuning system parameters",
+        "🔍 Investigating component behavior",
+        "📊 Aggregating metric data",
+        "🎨 Styling interface elements",
+        "🚀 Launching service instances",
+        "🔐 Encrypting sensitive data",
+        "💾 Caching computed results",
+        "🔄 Rotating log files",
+        "📈 Tracking performance trends",
+        "🔧 Adjusting configuration values",
+        "🎪 Coordinating parallel tasks",
+        "🔬 Examining data structures",
+    ]
+    for _ in range(count):
+        msg = random.choice(messages)
+        value = random.randint(1, 10000)
+        timestamp = datetime.now().strftime('%H:%M:%S.%f')
+        logger.info(f"{msg} - Value: {value}, Timestamp: {timestamp}, Iteration: {random.randint(1, 1000)}")
 
 def log_step(step_num, step_name, page=None):
     """Helper function to log detailed step information"""
@@ -94,6 +145,9 @@ class TestDashboard:
         logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
         logger.info(f"📊 Page Load State: {page.evaluate('document.readyState')}")
         logger.info("=" * 100)
+        
+        # Add random logging statements
+        log_random_info(500)
         
         # Step 1: Initialize page object
         step1_start = log_step(1, "Initializing Dashboard Page Object", page)
