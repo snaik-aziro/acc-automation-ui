@@ -70,6 +70,74 @@ def log_step_complete(step_num, step_start, success=True, details=""):
         logger.info(f"   {details}")
     logger.info(f"   ✓ Step {step_num} completed successfully" if success else f"   ✗ Step {step_num} failed")
 
+def log_detailed_page_state(page, context="General"):
+    """Helper function to log extensive page state information"""
+    try:
+        logger.debug(f"log_detailed_page_state() - Logging detailed page state for context: {context}")
+        logger.debug(f"log_detailed_page_state() - Page URL: {page.url}")
+        logger.debug(f"log_detailed_page_state() - Page Title: {page.title()}")
+        logger.debug(f"log_detailed_page_state() - Page Viewport: {page.viewport_size}")
+        logger.debug(f"log_detailed_page_state() - Page Ready State: {page.evaluate('document.readyState')}")
+        logger.debug(f"log_detailed_page_state() - Page Load State: {page.evaluate('performance.timing.loadEventEnd')}")
+        logger.debug(f"log_detailed_page_state() - DOM Content Loaded: {page.evaluate('performance.timing.domContentLoadedEventEnd')}")
+        logger.debug(f"log_detailed_page_state() - Navigation Start: {page.evaluate('performance.timing.navigationStart')}")
+        try:
+            body_text = page.evaluate("document.body.innerText")
+            logger.debug(f"log_detailed_page_state() - Body Text Length: {len(body_text)} characters")
+            logger.debug(f"log_detailed_page_state() - Body Text Preview: {body_text[:200]}...")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not get body text")
+        try:
+            all_elements = page.evaluate("document.querySelectorAll('*').length")
+            logger.debug(f"log_detailed_page_state() - Total DOM Elements: {all_elements}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count DOM elements")
+        try:
+            scripts = page.evaluate("document.querySelectorAll('script').length")
+            logger.debug(f"log_detailed_page_state() - Script Tags: {scripts}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count scripts")
+        try:
+            links = page.evaluate("document.querySelectorAll('a').length")
+            logger.debug(f"log_detailed_page_state() - Link Elements: {links}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count links")
+        try:
+            buttons = page.evaluate("document.querySelectorAll('button').length")
+            logger.debug(f"log_detailed_page_state() - Button Elements: {buttons}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count buttons")
+        try:
+            inputs = page.evaluate("document.querySelectorAll('input').length")
+            logger.debug(f"log_detailed_page_state() - Input Elements: {inputs}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count inputs")
+        try:
+            selects = page.evaluate("document.querySelectorAll('select').length")
+            logger.debug(f"log_detailed_page_state() - Select Elements: {selects}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count selects")
+        logger.debug(f"log_detailed_page_state() - Page state logging completed")
+    except Exception as e:
+        logger.debug(f"log_detailed_page_state() - Error logging page state: {e}")
+
+def log_periodic_status(page, interval_name="Status Check"):
+    """Helper function to log periodic status updates"""
+    logger.debug(f"log_periodic_status() - Periodic status check: {interval_name}")
+    logger.debug(f"log_periodic_status() - Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}")
+    logger.debug(f"log_periodic_status() - Page URL: {page.url}")
+    logger.debug(f"log_periodic_status() - Page Title: {page.title()}")
+    logger.debug(f"log_periodic_status() - Page Ready State: {page.evaluate('document.readyState')}")
+    try:
+        logger.debug(f"log_periodic_status() - Window Inner Width: {page.evaluate('window.innerWidth')}")
+        logger.debug(f"log_periodic_status() - Window Inner Height: {page.evaluate('window.innerHeight')}")
+        logger.debug(f"log_periodic_status() - Screen Width: {page.evaluate('screen.width')}")
+        logger.debug(f"log_periodic_status() - Screen Height: {page.evaluate('screen.height')}")
+        logger.debug(f"log_periodic_status() - Device Pixel Ratio: {page.evaluate('window.devicePixelRatio')}")
+    except:
+        logger.debug(f"log_periodic_status() - Could not get window dimensions")
+    logger.debug(f"log_periodic_status() - Status check completed")
+
 
 @pytest.mark.vm_management
 class TestVMManagement:
@@ -78,13 +146,34 @@ class TestVMManagement:
     @pytest.fixture(autouse=True)
     def setup(self, page: Page):
         """Setup for each test - navigate to VMs tab"""
+        logger.debug(f"TestVMManagement.setup() - Test setup fixture called")
+        logger.debug(f"TestVMManagement.setup() - Page URL: {page.url}")
+        log_detailed_page_state(page, "Test Setup - Initial State")
+        log_periodic_status(page, "Test Setup - Before Dashboard Load")
+        
         dashboard = DashboardPage(page)
+        logger.debug(f"TestVMManagement.setup() - DashboardPage object created")
+        log_periodic_status(page, "Test Setup - After DashboardPage Creation")
+        
         dashboard.load_dashboard()
+        logger.debug(f"TestVMManagement.setup() - Dashboard loaded")
+        log_detailed_page_state(page, "Test Setup - After Dashboard Load")
+        log_periodic_status(page, "Test Setup - After Dashboard Load")
+        
         dashboard.click_vms_tab()
+        logger.debug(f"TestVMManagement.setup() - VMs tab clicked")
+        log_periodic_status(page, "Test Setup - After VMs Tab Click")
         
         # Wait for VM list to load
         vm_page = VMPage(page)
+        logger.debug(f"TestVMManagement.setup() - VMPage object created")
+        log_periodic_status(page, "Test Setup - After VMPage Creation")
+        
         vm_page.wait_for_vm_list_to_load()
+        logger.debug(f"TestVMManagement.setup() - VM list loaded")
+        log_detailed_page_state(page, "Test Setup - After VM List Load")
+        log_periodic_status(page, "Test Setup - Final State")
+        logger.debug(f"TestVMManagement.setup() - Setup complete")
     
     @pytest.mark.smoke
     @pytest.mark.critical

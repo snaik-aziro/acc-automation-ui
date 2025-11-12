@@ -7,6 +7,8 @@ from playwright.sync_api import Page
 from pages.base_page import BasePage
 import logging
 import time
+import sys
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -45,43 +47,136 @@ class VMPage(BasePage):
             network_type: Network type (NAT, Bridge, Internal, Host-only)
             ip_address: Optional IP address
         """
+        method_start = time.time()
+        logger.debug(f"VMPage.create_vm() - Method called")
+        logger.debug(f"VMPage.create_vm() - Method parameters:")
+        logger.debug(f"VMPage.create_vm() -   name: {name} (type: {type(name).__name__}, length: {len(name)})")
+        logger.debug(f"VMPage.create_vm() -   memory: {memory} (type: {type(memory).__name__}, value: {memory} MB)")
+        logger.debug(f"VMPage.create_vm() -   cpu: {cpu} (type: {type(cpu).__name__}, value: {cpu} cores)")
+        logger.debug(f"VMPage.create_vm() -   network_type: {network_type} (type: {type(network_type).__name__})")
+        logger.debug(f"VMPage.create_vm() -   ip_address: {ip_address} (type: {type(ip_address).__name__}, length: {len(ip_address)})")
+        logger.debug(f"VMPage.create_vm() - Current page URL: {self.page.url}")
+        logger.debug(f"VMPage.create_vm() - Current page title: {self.page.title()}")
+        logger.debug(f"VMPage.create_vm() - Page ready state: {self.page.evaluate('document.readyState')}")
         logger.info(f"Creating VM: {name}")
         
         # Fill form fields
+        logger.debug(f"VMPage.create_vm() - Step 1: Filling VM name input")
+        logger.debug(f"VMPage.create_vm() -   Selector: {self.VM_NAME_INPUT}")
+        logger.debug(f"VMPage.create_vm() -   Value: {name}")
+        fill_name_start = time.time()
         self.fill_input(self.VM_NAME_INPUT, name)
+        fill_name_elapsed = time.time() - fill_name_start
+        logger.debug(f"VMPage.create_vm() -   VM name filled in {fill_name_elapsed:.4f} seconds")
         
         # Clear and fill memory
+        logger.debug(f"VMPage.create_vm() - Step 2: Clearing and filling memory input")
+        logger.debug(f"VMPage.create_vm() -   Selector: {self.VM_MEMORY_INPUT}")
+        logger.debug(f"VMPage.create_vm() -   Memory value: {memory} MB")
+        clear_mem_start = time.time()
         self.page.fill(self.VM_MEMORY_INPUT, "")
+        clear_mem_elapsed = time.time() - clear_mem_start
+        logger.debug(f"VMPage.create_vm() -   Memory input cleared in {clear_mem_elapsed:.4f} seconds")
+        fill_mem_start = time.time()
         self.fill_input(self.VM_MEMORY_INPUT, str(memory))
+        fill_mem_elapsed = time.time() - fill_mem_start
+        logger.debug(f"VMPage.create_vm() -   Memory value filled in {fill_mem_elapsed:.4f} seconds")
         
         # Clear and fill CPU
+        logger.debug(f"VMPage.create_vm() - Step 3: Clearing and filling CPU input")
+        logger.debug(f"VMPage.create_vm() -   Selector: {self.VM_CPU_INPUT}")
+        logger.debug(f"VMPage.create_vm() -   CPU value: {cpu} cores")
+        clear_cpu_start = time.time()
         self.page.fill(self.VM_CPU_INPUT, "")
+        clear_cpu_elapsed = time.time() - clear_cpu_start
+        logger.debug(f"VMPage.create_vm() -   CPU input cleared in {clear_cpu_elapsed:.4f} seconds")
+        fill_cpu_start = time.time()
         self.fill_input(self.VM_CPU_INPUT, str(cpu))
+        fill_cpu_elapsed = time.time() - fill_cpu_start
+        logger.debug(f"VMPage.create_vm() -   CPU value filled in {fill_cpu_elapsed:.4f} seconds")
         
         # Select network type
+        logger.debug(f"VMPage.create_vm() - Step 4: Selecting network type")
+        logger.debug(f"VMPage.create_vm() -   Selector: {self.VM_NETWORK_SELECT}")
+        logger.debug(f"VMPage.create_vm() -   Network type: {network_type}")
+        select_net_start = time.time()
         self.select_option(self.VM_NETWORK_SELECT, network_type)
+        select_net_elapsed = time.time() - select_net_start
+        logger.debug(f"VMPage.create_vm() -   Network type selected in {select_net_elapsed:.4f} seconds")
         
         # Fill IP if provided
         if ip_address:
+            logger.debug(f"VMPage.create_vm() - Step 5: Filling IP address (optional)")
+            logger.debug(f"VMPage.create_vm() -   Selector: {self.VM_IP_INPUT}")
+            logger.debug(f"VMPage.create_vm() -   IP address: {ip_address}")
+            fill_ip_start = time.time()
             self.fill_input(self.VM_IP_INPUT, ip_address)
+            fill_ip_elapsed = time.time() - fill_ip_start
+            logger.debug(f"VMPage.create_vm() -   IP address filled in {fill_ip_elapsed:.4f} seconds")
+        else:
+            logger.debug(f"VMPage.create_vm() - Step 5: Skipping IP address (not provided)")
         
         # Click create button
+        logger.debug(f"VMPage.create_vm() - Step 6: Clicking create VM button")
+        logger.debug(f"VMPage.create_vm() -   Selector: {self.CREATE_VM_BUTTON}")
+        click_start = time.time()
         self.click_element(self.CREATE_VM_BUTTON)
+        click_elapsed = time.time() - click_start
+        logger.debug(f"VMPage.create_vm() -   Create button clicked in {click_elapsed:.4f} seconds")
         
         # Wait for success alert
+        logger.debug(f"VMPage.create_vm() - Step 7: Waiting for VM creation success message")
+        logger.debug(f"VMPage.create_vm() -   Alert selector: {self.SUCCESS_ALERT}")
+        logger.debug(f"VMPage.create_vm() -   Timeout: 15000ms")
         logger.info("Waiting for VM creation success message")
+        alert_start = time.time()
         alert_message = self.wait_for_alert("success", timeout=15000)
+        alert_elapsed = time.time() - alert_start
+        logger.debug(f"VMPage.create_vm() -   Alert appeared after {alert_elapsed:.4f} seconds")
+        method_elapsed = time.time() - method_start
+        logger.debug(f"VMPage.create_vm() - Total method execution time: {method_elapsed:.4f} seconds")
+        logger.debug(f"VMPage.create_vm() - Alert message type: {type(alert_message).__name__}")
+        logger.debug(f"VMPage.create_vm() - Alert message length: {len(alert_message) if alert_message else 0} characters")
+        logger.debug(f"VMPage.create_vm() - Alert message memory: {sys.getsizeof(alert_message) if alert_message else 0} bytes")
         logger.info(f"VM creation result: {alert_message}")
         
         return alert_message
     
     def get_vm_list_count(self) -> int:
         """Get the count of VMs in the list"""
-        self.wait_for_selector(self.VM_LIST)
-        time.sleep(1)  # Wait for VMs to load
+        method_start = time.time()
+        logger.debug(f"VMPage.get_vm_list_count() - Method called")
+        logger.debug(f"VMPage.get_vm_list_count() - Current page URL: {self.page.url}")
+        logger.debug(f"VMPage.get_vm_list_count() - Current page title: {self.page.title()}")
+        logger.debug(f"VMPage.get_vm_list_count() - VM list selector: {self.VM_LIST}")
+        logger.debug(f"VMPage.get_vm_list_count() - VM card selector: {self.VM_CARD}")
         
+        wait_start = time.time()
+        self.wait_for_selector(self.VM_LIST)
+        wait_elapsed = time.time() - wait_start
+        logger.debug(f"VMPage.get_vm_list_count() - VM list selector found after {wait_elapsed:.4f} seconds")
+        
+        logger.debug(f"VMPage.get_vm_list_count() - Waiting 1 second for VMs to load")
+        sleep_start = time.time()
+        time.sleep(1)  # Wait for VMs to load
+        sleep_elapsed = time.time() - sleep_start
+        logger.debug(f"VMPage.get_vm_list_count() - Sleep completed in {sleep_elapsed:.4f} seconds")
+        
+        logger.debug(f"VMPage.get_vm_list_count() - Locating all VM cards")
+        locate_start = time.time()
         vm_cards = self.page.locator(self.VM_CARD).all()
+        locate_elapsed = time.time() - locate_start
+        logger.debug(f"VMPage.get_vm_list_count() - VM cards located in {locate_elapsed:.4f} seconds")
+        logger.debug(f"VMPage.get_vm_list_count() - VM cards list type: {type(vm_cards).__name__}")
+        logger.debug(f"VMPage.get_vm_list_count() - VM cards list length: {len(vm_cards)}")
+        logger.debug(f"VMPage.get_vm_list_count() - VM cards list memory: {sys.getsizeof(vm_cards)} bytes")
+        
         count = len(vm_cards)
+        method_elapsed = time.time() - method_start
+        logger.debug(f"VMPage.get_vm_list_count() - Total method execution time: {method_elapsed:.4f} seconds")
+        logger.debug(f"VMPage.get_vm_list_count() - Count result type: {type(count).__name__}")
+        logger.debug(f"VMPage.get_vm_list_count() - Count result value: {count}")
+        logger.debug(f"VMPage.get_vm_list_count() - Count result memory: {sys.getsizeof(count)} bytes")
         logger.info(f"VM count in list: {count}")
         return count
     

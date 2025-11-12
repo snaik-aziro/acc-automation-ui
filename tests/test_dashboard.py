@@ -40,6 +40,37 @@ def log_step_complete(step_num, step_start, success=True, details=""):
         logger.info(f"   {details}")
     logger.info(f"   ✓ Step {step_num} completed successfully" if success else f"   ✗ Step {step_num} failed")
 
+def log_detailed_page_state(page, context="General"):
+    """Helper function to log extensive page state information"""
+    try:
+        logger.debug(f"log_detailed_page_state() - Logging detailed page state for context: {context}")
+        logger.debug(f"log_detailed_page_state() - Page URL: {page.url}")
+        logger.debug(f"log_detailed_page_state() - Page Title: {page.title()}")
+        logger.debug(f"log_detailed_page_state() - Page Viewport: {page.viewport_size}")
+        logger.debug(f"log_detailed_page_state() - Page Ready State: {page.evaluate('document.readyState')}")
+        try:
+            all_elements = page.evaluate("document.querySelectorAll('*').length")
+            logger.debug(f"log_detailed_page_state() - Total DOM Elements: {all_elements}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count DOM elements")
+        try:
+            buttons = page.evaluate("document.querySelectorAll('button').length")
+            logger.debug(f"log_detailed_page_state() - Button Elements: {buttons}")
+        except:
+            logger.debug(f"log_detailed_page_state() - Could not count buttons")
+        logger.debug(f"log_detailed_page_state() - Page state logging completed")
+    except Exception as e:
+        logger.debug(f"log_detailed_page_state() - Error logging page state: {e}")
+
+def log_periodic_status(page, interval_name="Status Check"):
+    """Helper function to log periodic status updates"""
+    logger.debug(f"log_periodic_status() - Periodic status check: {interval_name}")
+    logger.debug(f"log_periodic_status() - Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}")
+    logger.debug(f"log_periodic_status() - Page URL: {page.url}")
+    logger.debug(f"log_periodic_status() - Page Title: {page.title()}")
+    logger.debug(f"log_periodic_status() - Page Ready State: {page.evaluate('document.readyState')}")
+    logger.debug(f"log_periodic_status() - Status check completed")
+
 
 @pytest.mark.dashboard
 @pytest.mark.smoke

@@ -6,6 +6,9 @@ Handles all dashboard-related interactions
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 import logging
+import time
+import sys
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -61,15 +64,47 @@ class DashboardPage(BasePage):
     
     def click_vms_tab(self):
         """Click on Virtual Machines tab"""
+        method_start = time.time()
+        logger.debug(f"DashboardPage.click_vms_tab() - Method called")
+        logger.debug(f"DashboardPage.click_vms_tab() - Current page URL: {self.page.url}")
+        logger.debug(f"DashboardPage.click_vms_tab() - Current page title: {self.page.title()}")
+        logger.debug(f"DashboardPage.click_vms_tab() - Tab selector: {self.TAB_VMS}")
+        logger.debug(f"DashboardPage.click_vms_tab() - Content selector: {self.VMS_CONTENT}")
         logger.info("Clicking VMs tab")
+        click_start = time.time()
         self.click_element(self.TAB_VMS)
+        click_elapsed = time.time() - click_start
+        logger.debug(f"DashboardPage.click_vms_tab() - Tab clicked in {click_elapsed:.4f} seconds")
+        wait_start = time.time()
         self.wait_for_selector(self.VMS_CONTENT)
+        wait_elapsed = time.time() - wait_start
+        method_elapsed = time.time() - method_start
+        logger.debug(f"DashboardPage.click_vms_tab() - Content appeared after {wait_elapsed:.4f} seconds")
+        logger.debug(f"DashboardPage.click_vms_tab() - Total method execution time: {method_elapsed:.4f} seconds")
+        logger.info(f"VMs tab clicked and content loaded in {method_elapsed:.4f} seconds")
     
     def click_create_tab(self):
         """Click on Create VM tab"""
+        method_start = time.time()
+        logger.debug(f"DashboardPage.click_create_tab() - Method called")
+        logger.debug(f"DashboardPage.click_create_tab() - Current page URL: {self.page.url}")
+        logger.debug(f"DashboardPage.click_create_tab() - Current page title: {self.page.title()}")
+        logger.debug(f"DashboardPage.click_create_tab() - Tab selector: {self.TAB_CREATE}")
+        logger.debug(f"DashboardPage.click_create_tab() - Content selector: {self.CREATE_CONTENT}")
         logger.info("Clicking Create VM tab")
+        click_start = time.time()
         self.click_element(self.TAB_CREATE)
+        click_elapsed = time.time() - click_start
+        logger.debug(f"DashboardPage.click_create_tab() - Tab clicked in {click_elapsed:.4f} seconds")
+        wait_start = time.time()
         self.wait_for_selector(self.CREATE_CONTENT)
+        wait_elapsed = time.time() - wait_start
+        method_elapsed = time.time() - method_start
+        logger.debug(f"DashboardPage.click_create_tab() - Content appeared after {wait_elapsed:.4f} seconds")
+        logger.debug(f"DashboardPage.click_create_tab() - Total method execution time: {method_elapsed:.4f} seconds")
+        logger.debug(f"DashboardPage.click_create_tab() - New page URL: {self.page.url}")
+        logger.debug(f"DashboardPage.click_create_tab() - New page title: {self.page.title()}")
+        logger.info(f"Create VM tab clicked and content loaded in {method_elapsed:.4f} seconds")
     
     def click_logs_tab(self):
         """Click on System Logs tab"""
