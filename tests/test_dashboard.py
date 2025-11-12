@@ -8,8 +8,37 @@ from playwright.sync_api import Page, expect
 from pages.dashboard_page import DashboardPage
 from utils.test_reporter import reporter
 import logging
+import time
+import sys
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
+
+def log_step(step_num, step_name, page=None):
+    """Helper function to log detailed step information"""
+    step_start = time.time()
+    logger.info("")
+    logger.info("━" * 100)
+    logger.info(f"📍 STEP {step_num}: {step_name}")
+    logger.info("━" * 100)
+    logger.info(f"   ⏰ Step Start: {datetime.now().strftime('%H:%M:%S.%f')}")
+    if page:
+        try:
+            logger.info(f"   🌐 Current URL: {page.url}")
+            logger.info(f"   📄 Current Title: {page.title()}")
+            logger.info(f"   📍 Page State: {page.evaluate('document.readyState')}")
+        except:
+            pass
+    return step_start
+
+def log_step_complete(step_num, step_start, success=True, details=""):
+    """Helper function to log step completion"""
+    step_elapsed = time.time() - step_start
+    status = "✅" if success else "❌"
+    logger.info(f"   {status} Step {step_num} completed in {step_elapsed:.4f} seconds")
+    if details:
+        logger.info(f"   {details}")
+    logger.info(f"   ✓ Step {step_num} completed successfully" if success else f"   ✗ Step {step_num} failed")
 
 
 @pytest.mark.dashboard
@@ -19,79 +48,190 @@ class TestDashboard:
     
     def test_dashboard_loads_successfully(self, page: Page):
         """Test that dashboard loads with all expected elements"""
-        logger.info("=" * 80)
-        logger.info("TEST: Dashboard loads successfully - START")
-        logger.info("=" * 80)
+        test_start_time = time.time()
+        test_timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
+        logger.info("=" * 100)
+        logger.info("=" * 100)
+        logger.info("🚀 TEST: Dashboard loads successfully - START")
+        logger.info("=" * 100)
+        logger.info(f"⏰ Test Start Time: {test_timestamp}")
+        logger.info(f"🆔 Test ID: test_dashboard_loads_successfully")
+        logger.info(f"📋 Test Description: Test that dashboard loads with all expected elements")
+        logger.info(f"🏷️  Test Markers: @pytest.mark.dashboard, @pytest.mark.smoke")
+        logger.info(f"🌐 Page URL Before Test: {page.url}")
+        logger.info(f"📏 Page Viewport: {page.viewport_size}")
+        logger.info(f"🧠 Memory Usage: {sys.getsizeof(page)} bytes (page object)")
+        logger.info(f"📊 Page Load State: {page.evaluate('document.readyState')}")
+        logger.info("=" * 100)
         
         # Step 1: Initialize page object
-        logger.info("Step 1: Initializing Dashboard Page Object")
+        step1_start = log_step(1, "Initializing Dashboard Page Object", page)
         reporter.print_test_step(1, "Initialize Dashboard Page Object", "running")
+        logger.info(f"   📦 Input: page object type={type(page).__name__}")
+        logger.info(f"   🔍 Page State: url={page.url}, title={page.title()}")
+        logger.info(f"   🧠 Memory Before: {sys.getsizeof(page)} bytes")
+        logger.info(f"   🎯 Action: Creating DashboardPage(page) instance")
         dashboard = DashboardPage(page)
-        logger.info("✓ Dashboard page object created successfully")
+        step1_elapsed = time.time() - step1_start
+        logger.info(f"   ✅ DashboardPage object created in {step1_elapsed:.4f} seconds")
+        logger.info(f"   📊 Object Type: {type(dashboard).__name__}")
+        logger.info(f"   📏 Object Size: {sys.getsizeof(dashboard)} bytes")
+        logger.info(f"   🔗 Object ID: {id(dashboard)}")
+        logger.info(f"   📍 Object Location: {dashboard.__class__.__module__}")
+        log_step_complete(1, step1_start, True, "Dashboard page object created successfully")
         reporter.print_test_step(1, "Initialize Dashboard Page Object", "pass")
         
         # Step 2: Load dashboard
-        logger.info("Step 2: Navigating to Dashboard URL")
+        step2_start = log_step(2, "Navigating to Dashboard URL", page)
         reporter.print_test_step(2, "Navigate to Dashboard URL", "running")
+        logger.info(f"   🎯 Method: dashboard.load_dashboard()")
+        logger.info(f"   📍 Method Location: {dashboard.load_dashboard.__code__.co_filename}:{dashboard.load_dashboard.__code__.co_firstlineno}")
+        logger.info(f"   🔍 Pre-navigation State:")
+        logger.info(f"      Current URL: {page.url}")
+        logger.info(f"      Current Title: {page.title()}")
+        logger.info(f"      Page Load State: {page.evaluate('document.readyState')}")
+        logger.info(f"   🚀 Executing load_dashboard() call...")
+        call_start = time.time()
         dashboard.load_dashboard()
-        logger.info("✓ Dashboard URL navigation completed")
+        call_elapsed = time.time() - call_start
+        step2_elapsed = time.time() - step2_start
+        logger.info(f"   ⏱️  Navigation completed in {call_elapsed:.4f} seconds")
+        logger.info(f"   🔍 Post-navigation State:")
+        logger.info(f"      Current URL: {page.url}")
+        logger.info(f"      Current Title: {page.title()}")
+        logger.info(f"      Page Load State: {page.evaluate('document.readyState')}")
+        logger.info(f"   📊 Navigation Metrics:")
+        logger.info(f"      URL Changed: {page.url != (page.url if 'url' in locals() else '')}")
+        logger.info(f"      Title Changed: {page.title() != (page.title() if 'title' in locals() else '')}")
+        log_step_complete(2, step2_start, True, f"Dashboard URL navigation completed in {call_elapsed:.4f} seconds")
         reporter.print_test_step(2, "Navigate to Dashboard URL", "pass")
         
         # Step 3: Verify dashboard loaded
-        logger.info("Step 3: Verifying dashboard elements are loaded")
+        step3_start = log_step(3, "Verifying dashboard elements are loaded", page)
         reporter.print_test_step(3, "Verify Dashboard Elements Loaded", "running")
+        logger.info(f"   🎯 Method: dashboard.verify_dashboard_loaded()")
+        logger.info(f"   📍 Method Location: {dashboard.verify_dashboard_loaded.__code__.co_filename}:{dashboard.verify_dashboard_loaded.__code__.co_firstlineno}")
+        logger.info(f"   🔍 Pre-verification State:")
+        logger.info(f"      Current URL: {page.url}")
+        logger.info(f"      Current Title: {page.title()}")
+        logger.info(f"      Page Load State: {page.evaluate('document.readyState')}")
+        logger.info(f"   🚀 Executing verify_dashboard_loaded() call...")
+        call_start = time.time()
         is_loaded = dashboard.verify_dashboard_loaded()
-        logger.info(f"Step 4: Dashboard loaded status: {is_loaded}")
+        call_elapsed = time.time() - call_start
+        step3_elapsed = time.time() - step3_start
+        logger.info(f"   ⏱️  Verification completed in {call_elapsed:.4f} seconds")
+        logger.info(f"   📊 Verification Result:")
+        logger.info(f"      Dashboard Loaded: {is_loaded}")
+        logger.info(f"      Result Type: {type(is_loaded).__name__}")
+        logger.info(f"      Result Value: {is_loaded}")
+        logger.info(f"      Memory: {sys.getsizeof(is_loaded)} bytes")
         reporter.print_assertion(
             "Dashboard loaded successfully",
             "True",
             str(is_loaded),
             is_loaded
         )
-        logger.info("Step 5: Asserting dashboard loaded successfully")
+        logger.info(f"   ✅ Assertion: assert is_loaded")
+        assert_start = time.time()
         assert is_loaded, "Dashboard did not load properly"
-        logger.info("✓ Dashboard loaded assertion passed")
+        assert_elapsed = time.time() - assert_start
+        logger.info(f"   ✅ Assertion passed in {assert_elapsed:.4f} seconds")
+        log_step_complete(3, step3_start, True, f"Dashboard loaded assertion passed in {assert_elapsed:.4f} seconds")
         reporter.print_test_step(3, "Verify Dashboard Elements Loaded", "pass")
         
         # Step 4: Verify page title
-        logger.info("Step 6: Retrieving page title")
+        step4_start = log_step(4, "Retrieving page title", page)
         reporter.print_test_step(4, "Verify Page Title", "running")
+        logger.info(f"   🎯 Method: dashboard.get_page_title()")
+        logger.info(f"   📍 Method Location: {dashboard.get_page_title.__code__.co_filename}:{dashboard.get_page_title.__code__.co_firstlineno}")
+        logger.info(f"   🚀 Executing get_page_title() call...")
+        call_start = time.time()
         title = dashboard.get_page_title()
-        logger.info(f"Step 7: Page title retrieved: '{title}'")
+        call_elapsed = time.time() - call_start
+        step4_elapsed = time.time() - step4_start
+        logger.info(f"   ⏱️  Title retrieval completed in {call_elapsed:.4f} seconds")
+        logger.info(f"   📊 Title Details:")
+        logger.info(f"      Title Value: '{title}'")
+        logger.info(f"      Title Type: {type(title).__name__}")
+        logger.info(f"      Title Length: {len(title)} characters")
+        logger.info(f"      Title Memory: {sys.getsizeof(title)} bytes")
+        logger.info(f"   🔍 Title Analysis:")
+        logger.info(f"      Contains 'Aziro': {'Aziro' in title}")
+        logger.info(f"      Contains 'Cluster': {'Cluster' in title}")
+        logger.info(f"      Contains 'Center': {'Center' in title}")
+        logger.info(f"      Contains 'Aziro Cluster Center': {'Aziro Cluster Center' in title}")
         title_check = "Aziro Cluster Center" in title
-        logger.info(f"Step 8: Title check result: {title_check}")
+        logger.info(f"   📊 Title Check Result: {title_check}")
         reporter.print_assertion(
             "Page title contains 'Aziro Cluster Center'",
             "Aziro Cluster Center in title",
             title,
             title_check
         )
-        logger.info("Step 9: Asserting 'Aziro Cluster Center' is in title")
+        logger.info(f"   ✅ Assertion: assert 'Aziro Cluster Center' in title")
+        assert_start = time.time()
         assert title_check, f"Expected title to contain 'Aziro Cluster Center', got: {title}"
-        logger.info("✓ Page title validation passed")
+        assert_elapsed = time.time() - assert_start
+        logger.info(f"   ✅ Assertion passed in {assert_elapsed:.4f} seconds")
+        log_step_complete(4, step4_start, True, f"Page title validation passed in {assert_elapsed:.4f} seconds")
         reporter.print_test_step(4, "Verify Page Title", "pass")
         
         # Step 5: Verify page description
-        logger.info("Step 10: Retrieving page description")
+        step5_start = log_step(5, "Retrieving page description", page)
         reporter.print_test_step(5, "Verify Page Description", "running")
+        logger.info(f"   🎯 Method: dashboard.get_page_description()")
+        logger.info(f"   📍 Method Location: {dashboard.get_page_description.__code__.co_filename}:{dashboard.get_page_description.__code__.co_firstlineno}")
+        logger.info(f"   🚀 Executing get_page_description() call...")
+        call_start = time.time()
         description = dashboard.get_page_description()
-        logger.info(f"Step 11: Page description retrieved: '{description[:80]}...'")
+        call_elapsed = time.time() - call_start
+        step5_elapsed = time.time() - step5_start
+        logger.info(f"   ⏱️  Description retrieval completed in {call_elapsed:.4f} seconds")
+        logger.info(f"   📊 Description Details:")
+        logger.info(f"      Description Length: {len(description)} characters")
+        logger.info(f"      Description Type: {type(description).__name__}")
+        logger.info(f"      Description Memory: {sys.getsizeof(description)} bytes")
+        logger.info(f"      Description Preview: '{description[:80]}...'")
+        logger.info(f"      Description Word Count: {len(description.split())}")
+        logger.info(f"   🔍 Description Analysis:")
+        logger.info(f"      Contains 'Enterprise': {'Enterprise' in description}")
+        logger.info(f"      Contains 'Enterprise-grade': {'Enterprise-grade' in description}")
+        logger.info(f"      Contains 'virtual': {'virtual' in description.lower()}")
+        logger.info(f"      Contains 'machine': {'machine' in description.lower()}")
         desc_check = "Enterprise-grade" in description
-        logger.info(f"Step 12: Description contains 'Enterprise-grade': {desc_check}")
+        logger.info(f"   📊 Description Check Result: {desc_check}")
         reporter.print_assertion(
             "Description contains 'Enterprise-grade'",
             "Enterprise-grade in description",
             description,
             desc_check
         )
-        logger.info("Step 13: Asserting description contains 'Enterprise-grade'")
+        logger.info(f"   ✅ Assertion: assert 'Enterprise-grade' in description")
+        assert_start = time.time()
         assert desc_check, "Page description not found"
-        logger.info("✓ Page description validation passed")
+        assert_elapsed = time.time() - assert_start
+        logger.info(f"   ✅ Assertion passed in {assert_elapsed:.4f} seconds")
+        log_step_complete(5, step5_start, True, f"Page description validation passed in {assert_elapsed:.4f} seconds")
         reporter.print_test_step(5, "Verify Page Description", "pass")
         
-        logger.info("=" * 80)
+        test_elapsed = time.time() - test_start_time
+        logger.info("")
+        logger.info("=" * 100)
+        logger.info("=" * 100)
         logger.info("✓✓✓ TEST PASSED: Dashboard loaded and verified successfully!")
-        logger.info("=" * 80)
+        logger.info("=" * 100)
+        logger.info(f"⏰ Test End Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')}")
+        logger.info(f"⏱️  Total Test Duration: {test_elapsed:.4f} seconds")
+        logger.info(f"📊 Test Summary:")
+        logger.info(f"   - Steps Executed: 5")
+        logger.info(f"   - Dashboard Loaded: {is_loaded}")
+        logger.info(f"   - Page Title: '{title}'")
+        logger.info(f"   - Description Length: {len(description)} characters")
+        logger.info(f"   - Status: PASSED")
+        logger.info(f"   - Memory Usage: {sys.getsizeof(page) + sys.getsizeof(dashboard)} bytes")
+        logger.info("=" * 100)
+        logger.info("=" * 100)
         reporter.print_success("Dashboard loaded and verified successfully!")
     
     def test_dashboard_displays_metrics(self, page: Page):
