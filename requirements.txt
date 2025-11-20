@@ -16,3 +16,6 @@ requests==2.32.3
 # Reporting
 allure-pytest==2.13.5
 
+# Dashboard
+beautifulsoup4==4.12.3
+

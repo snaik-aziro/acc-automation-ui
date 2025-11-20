@@ -84,10 +84,42 @@ echo "  - HTML Report: reports/test-report.html"
 echo "  - Screenshots: reports/screenshots/"
 echo ""
 
-# Open HTML report (macOS)
+# Start the results dashboard server in the background
+echo ""
+echo "=========================================="
+echo "Starting Results Dashboard Server"
+echo "=========================================="
+echo ""
+
+# Check if dashboard server is already running
+if lsof -ti:8003 > /dev/null 2>&1; then
+    echo -e "${YELLOW}⚠️  Dashboard server already running on port 8003${NC}"
+    echo -e "${GREEN}✓ Dashboard available at: http://localhost:8003${NC}"
+else
+    # Start dashboard server in background
+    echo -e "${YELLOW}Starting dashboard server on port 8003...${NC}"
+    python3 dashboard_server.py > dashboard.log 2>&1 &
+    DASHBOARD_PID=$!
+    sleep 2
+    
+    if kill -0 $DASHBOARD_PID 2>/dev/null; then
+        echo -e "${GREEN}✓ Dashboard server started (PID: $DASHBOARD_PID)${NC}"
+        echo -e "${GREEN}✓ Dashboard available at: http://localhost:8003${NC}"
+        echo ""
+        echo "To stop the dashboard server, run: kill $DASHBOARD_PID"
+    else
+        echo -e "${RED}✗ Failed to start dashboard server${NC}"
+        echo "Check dashboard.log for errors"
+    fi
+fi
+
+echo ""
+
+# Open dashboard in browser (macOS)
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "Opening test report in browser..."
-    open reports/test-report.html
+    echo "Opening results dashboard in browser..."
+    sleep 1
+    open http://localhost:8003
 fi
 
 exit $TEST_EXIT_CODE
