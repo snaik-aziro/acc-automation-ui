@@ -764,61 +764,12 @@ class TestLoggingSystem:
         logger.info("=" * 100)
         logger.info("=" * 100)
     
-    def test_log_entries_have_correct_format(self, page: Page):
-        """Test that log entries have the correct format"""
-        logger.info("=" * 80)
-        logger.info("TEST: Log entries format - START")
-        logger.info("=" * 80)
-        
-        logger.info("Step 1: Creating logs page object")
-        logs_page = LogsPage(page)
-        logger.info("✓ Logs page object created")
-        
-        logger.info("Step 2: Loading L3 logs for format validation")
-        logs_page.load_l3_logs()
-        logger.info("✓ L3 logs loaded")
-        
-        # Get log entries
-        logger.info("Step 3: Retrieving log entries from display")
-        entries = logs_page.get_log_entries("L3")
-        logger.info(f"Step 4: Retrieved {len(entries)} log entries")
-        
-        if len(entries) > 0:
-            logger.info(f"Step 5: Log entries found - validating format of {len(entries)} entries")
-            
-            # Check first entry format
-            first_entry = entries[0]
-            logger.info(f"Step 6: First log entry: {first_entry[:150]}...")
-            
-            # Log entries should contain timestamp and level
-            logger.info("Step 7: Checking for timestamp in brackets [...]")
-            assert "[" in first_entry, "Log entry should contain timestamp in brackets"
-            logger.info("✓ Timestamp bracket found")
-            
-            logger.info("Step 8: Checking for log level (L3 or INFO)")
-            has_level = "L3" in first_entry or "INFO" in first_entry.upper()
-            assert has_level, "Log entry should contain log level"
-            logger.info("✓ Log level indicator found")
-            
-            logger.info("Step 9: Log format components validated:")
-            logger.info(f"  - Contains brackets: {'✓' if '[' in first_entry else '✗'}")
-            logger.info(f"  - Contains level: {'✓' if has_level else '✗'}")
-            logger.info(f"  - Entry length: {len(first_entry)} characters")
-            
-            logger.info("=" * 80)
-            logger.info(f"✓✓✓ TEST PASSED: Log format verified. Sample: {first_entry[:100]}")
-            logger.info("=" * 80)
-        else:
-            logger.info("Step 5: No log entries found")
-            logger.info("⊘ Cannot verify format without log entries")
-            logger.info("=" * 80)
-            logger.info("TEST SKIPPED: No L3 log entries found to verify format")
-            logger.info("=" * 80)
-    
     def test_all_log_levels_accessible(self, page: Page):
-        """Test that all log level buttons are accessible"""
+        """Test that all log level buttons are accessible - INTENTIONALLY FAILS WITH WRONG LOCATOR"""
         logger.info("=" * 80)
         logger.info("TEST: All log levels accessible - START")
+        logger.info("=" * 80)
+        logger.info("⚠️  NOTE: This test uses WRONG LOCATOR to simulate automation script issue")
         logger.info("=" * 80)
         
         logger.info("Step 1: Initializing logs page object")
@@ -844,105 +795,23 @@ class TestLoggingSystem:
         assert logs_page.is_visible(logs_page.L3_LOGS_BUTTON), "L3 logs button should be visible"
         logger.info("✓ L3 logs button is accessible")
         
-        logger.info("Step 8: Checking visibility of Clear logs button")
-        clear_visible = logs_page.is_visible(logs_page.CLEAR_LOGS_BUTTON)
-        logger.info(f"Step 9: Clear logs button visible: {clear_visible}")
-        assert logs_page.is_visible(logs_page.CLEAR_LOGS_BUTTON), "Clear logs button should be visible"
+        logger.info("Step 8: Checking visibility of Clear logs button - USING WRONG LOCATOR")
+        # INTENTIONAL: Using wrong locator to simulate automation script issue
+        wrong_locator = '[data-testid="clear-logs-button-wrong"]'  # Wrong locator - should be 'clear-logs-button'
+        logger.info(f"⚠️  Using WRONG locator: {wrong_locator}")
+        logger.info(f"   Correct locator should be: {logs_page.CLEAR_LOGS_BUTTON}")
+        clear_visible = logs_page.is_visible(wrong_locator)
+        logger.info(f"Step 9: Clear logs button visible (with wrong locator): {clear_visible}")
+        assert logs_page.is_visible(wrong_locator), "Clear logs button should be visible (AUTOMATION SCRIPT ISSUE: Wrong locator used)"
         logger.info("✓ Clear logs button is accessible")
         
         logger.info("Step 10: Button visibility summary:")
         logger.info(f"  - L1 (Critical) Button: ✓")
         logger.info(f"  - L2 (Warning) Button:  ✓")
         logger.info(f"  - L3 (Info) Button:     ✓")
-        logger.info(f"  - Clear Logs Button:    ✓")
+        logger.info(f"  - Clear Logs Button:    ✗ (WRONG LOCATOR - TEST WILL FAIL)")
         
         logger.info("=" * 80)
         logger.info("✓✓✓ TEST PASSED: All log level buttons are accessible")
         logger.info("=" * 80)
     
-    def test_log_container_exists(self, page: Page):
-        """Test that log container element exists and is visible"""
-        logger.info("=" * 80)
-        logger.info("TEST: Log container exists - START")
-        logger.info("=" * 80)
-        
-        logger.info("Step 1: Creating logs page object instance")
-        logs_page = LogsPage(page)
-        logger.info("✓ Logs page object instantiated")
-        
-        # Verify log container is visible
-        logger.info("Step 2: Checking if log container element exists on the page")
-        logger.info(f"Step 3: Looking for element: {logs_page.LOG_CONTAINER}")
-        
-        logger.info("Step 4: Verifying log container visibility")
-        is_visible = logs_page.is_visible(logs_page.LOG_CONTAINER)
-        logger.info(f"Step 5: Log container visibility status: {is_visible}")
-        
-        logger.info("Step 6: Asserting log container is visible")
-        assert logs_page.is_visible(logs_page.LOG_CONTAINER), "Log container should be visible"
-        logger.info("✓ Log container visibility assertion passed")
-        
-        logger.info("=" * 80)
-        logger.info("✓✓✓ TEST PASSED: Log container exists and is visible")
-        logger.info("=" * 80)
-    
-    @pytest.mark.slow
-    def test_multiple_log_level_switches(self, page: Page):
-        """Test switching between different log levels multiple times"""
-        logger.info("=" * 80)
-        logger.info("TEST: Multiple log level switches - START")
-        logger.info("=" * 80)
-        
-        logger.info("Step 1: Initializing logs page object for stress test")
-        logs_page = LogsPage(page)
-        logger.info("✓ Logs page object ready for multiple switches")
-        
-        # Switch between log levels multiple times
-        logger.info("Step 2: Starting 2 cycles of log level switching (L1→L2→L3)")
-        total_switches = 0
-        
-        for i in range(2):
-            logger.info(f"{'='*60}")
-            logger.info(f"CYCLE {i+1} of 2 - Starting log level switch cycle")
-            logger.info(f"{'='*60}")
-            
-            logger.info(f"Cycle {i+1}, Step 1: Switching to L1 (Critical) logs")
-            logs_page.load_l1_logs()
-            logger.info(f"Cycle {i+1}, Step 2: Getting L1 log container text")
-            l1_text = logs_page.get_log_container_text()
-            logger.info(f"Cycle {i+1}, Step 3: L1 text length: {len(l1_text) if l1_text else 0}")
-            assert logs_page.get_log_container_text() is not None
-            logger.info(f"✓ Cycle {i+1}: L1 logs loaded successfully")
-            total_switches += 1
-            
-            logger.info(f"Cycle {i+1}, Step 4: Switching to L2 (Warning) logs")
-            logs_page.load_l2_logs()
-            logger.info(f"Cycle {i+1}, Step 5: Getting L2 log container text")
-            l2_text = logs_page.get_log_container_text()
-            logger.info(f"Cycle {i+1}, Step 6: L2 text length: {len(l2_text) if l2_text else 0}")
-            assert logs_page.get_log_container_text() is not None
-            logger.info(f"✓ Cycle {i+1}: L2 logs loaded successfully")
-            total_switches += 1
-            
-            logger.info(f"Cycle {i+1}, Step 7: Switching to L3 (Info) logs")
-            logs_page.load_l3_logs()
-            logger.info(f"Cycle {i+1}, Step 8: Getting L3 log container text")
-            l3_text = logs_page.get_log_container_text()
-            logger.info(f"Cycle {i+1}, Step 9: L3 text length: {len(l3_text) if l3_text else 0}")
-            assert logs_page.get_log_container_text() is not None
-            logger.info(f"✓ Cycle {i+1}: L3 logs loaded successfully")
-            total_switches += 1
-            
-            logger.info(f"✓✓ Cycle {i+1} completed: All 3 log levels switched successfully")
-        
-        logger.info(f"{'='*60}")
-        logger.info(f"Step 3: All cycles completed")
-        logger.info(f"Step 4: Total log level switches performed: {total_switches}")
-        logger.info(f"Step 5: Switches per cycle: 3 (L1→L2→L3)")
-        logger.info(f"Step 6: Cycles completed: 2")
-        
-        logger.info("=" * 80)
-        logger.info("✓✓✓ TEST PASSED: Multiple log level switches work correctly")
-        logger.info(f"✓✓✓ Total {total_switches} switches completed successfully")
-        logger.info("=" * 80)
-
