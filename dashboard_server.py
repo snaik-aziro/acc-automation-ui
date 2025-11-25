@@ -1303,7 +1303,26 @@ class DashboardHandler(http.server.SimpleHTTPRequestHandler):
 def main():
     """Main function to start the dashboard server"""
     # Ensure reports directory exists
+    # Change to script directory to ensure correct paths
+    script_dir = Path(__file__).parent.absolute()
+    os.chdir(script_dir)
+    
+    # Log the working directory for debugging
+    print(f"📁 Working directory: {os.getcwd()}")
+    print(f"📁 Script location: {script_dir}")
+    print(f"📁 Reports directory: {REPORTS_DIR.absolute()}")
+    print(f"📁 Logs directory: {LOGS_DIR.absolute()}")
+    
+    # Ensure reports directory exists
     REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+    LOGS_DIR.mkdir(parents=True, exist_ok=True)
+    
+    # Verify report file exists
+    if not HTML_REPORT.exists():
+        print(f"⚠️  WARNING: HTML report not found at {HTML_REPORT.absolute()}")
+        print(f"   Reports directory contents: {list(REPORTS_DIR.glob('*')) if REPORTS_DIR.exists() else 'Directory does not exist'}")
+    else:
+        print(f"✅ HTML report found: {HTML_REPORT.absolute()}")
     
     handler = DashboardHandler
     
