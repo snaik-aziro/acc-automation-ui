@@ -45,7 +45,8 @@ playwright install chromium
 echo -e "${GREEN}✓ Playwright browsers installed${NC}"
 
 # Create reports directory
-mkdir -p reports/screenshots reports/allure-results
+mkdir -p reports/screenshots
+# Note: allure-results removed to avoid greenlet dependency
 
 echo ""
 echo "=========================================="

@@ -1,21 +1,28 @@
 # Aziro Cluster Center - UI Automation Dependencies
 
+# CRITICAL: Install greenlet 3.2.4 FIRST (Python 3.14 compatibility)
+# Playwright 1.48.0 requires greenlet==3.1.1 which doesn't support Python 3.14
+# Solution: Use newer Playwright version that supports greenlet 3.2.4+
+greenlet==3.2.4
+
 # Playwright for browser automation
-playwright==1.48.0
-pytest-playwright==0.5.2
+# Using newer version that's compatible with greenlet 3.2.4 and Python 3.14
+playwright>=1.49.0
+pytest-playwright>=0.5.2
 
 # Testing framework
 pytest==8.3.3
 pytest-html==4.1.1
-pytest-xdist==3.6.1
+# pytest-xdist removed to avoid greenlet dependency (Python 3.14 compatibility)
+# Note: Parallel execution not currently used - can be added back later if needed
 
 # Utilities
 python-dotenv==1.0.1
 requests==2.32.3
 
-# Reporting
-allure-pytest==2.13.5
-
 # Dashboard
 beautifulsoup4==4.12.3
+
+# Note: allure-pytest removed to avoid greenlet dependency (Python 3.14 compatibility)
+# The dashboard will work without Allure results - it gracefully handles missing data
 

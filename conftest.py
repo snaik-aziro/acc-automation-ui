@@ -349,7 +349,8 @@ def pytest_configure(config):
     # Create reports directory
     os.makedirs("reports", exist_ok=True)
     os.makedirs("reports/screenshots", exist_ok=True)
-    os.makedirs("reports/allure-results", exist_ok=True)
+    # Note: allure-results directory removed to avoid greenlet dependency
+    # os.makedirs("reports/allure-results", exist_ok=True)
     
     logger.info("Pytest configuration completed")
     logger.info(f"Base URL: {BASE_URL}")
